@@ -68,5 +68,5 @@ else:
     print 'HTTP_PROXY and HTTP_PROXY are not set.'
 
 command = (command + proxy_args + sys.argv[2:])
-print str(command)
+print ' '.join(command)
 call(command)
