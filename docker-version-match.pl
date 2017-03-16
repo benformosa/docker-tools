@@ -30,3 +30,6 @@ sub version_gt_1point6 {
     }
     return 0;
 }
+
+# One-liner variant. Prints 0 or 1
+# sudo docker --version | perl -ne 'my $input = $_; $input =~ s/Docker version (\d{1,2}\.\d{1,2})/$1/; my($major, $minor) = split(/\./, $input, 2); if($major >= 17) { print 1, "\n"; } elsif($major == 1) { if($minor >= 6) { print 1, "\n"; } else { print 0, "\n";} } else { print 0, "\n"; }'
