@@ -30,8 +30,8 @@ env_vars = (
 
 # Print usage
 if (set(['--help', '-h']).intersection(sys.argv)) or (len(sys.argv) <= 1):
-    print 'usage: docker_proxy.py [{}] ...'.format('|'.join(docker_commands.keys()))
-    print 'use in place of `docker` for selected commands.'
+    print('usage: docker_proxy.py [{}] ...'.format('|'.join(docker_commands.keys())))
+    print('use in place of `docker` for selected commands.')
     sys.exit(0)
 
 # Set docker command
@@ -62,9 +62,9 @@ if subcommand in docker_commands.keys():
             proxy_args.append('{}={}={}'.format(docker_commands[subcommand], env, proxy))
 
     else:
-        print 'HTTP_PROXY and HTTP_PROXY are not set.'
+        print('HTTP_PROXY and HTTP_PROXY are not set.')
 
     command = (command + proxy_args + sys.argv[2:])
-    print ' '.join(command)
+    print(' '.join(command))
 
 call(command)
