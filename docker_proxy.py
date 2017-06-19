@@ -34,39 +34,37 @@ if (set(['--help', '-h']).intersection(sys.argv)) or (len(sys.argv) <= 1):
     print 'use in place of `docker` for selected commands.'
     sys.exit(0)
 
-# Set docker command and check if supported
+# Set docker command
 subcommand = sys.argv[1]
-if subcommand not in docker_commands.keys():
-    print 'Unsupported docker subcommand. Please use one of: ' + ' '.join(docker_commands.keys())
-    sys.exit(1)
-
 command = ['docker', subcommand]
 
-# Get the proxy from environment variables
-proxy = os.getenv('HTTP_PROXY', "")
-if not proxy:
-    proxy = os.getenv('http_proxy', "")
+if subcommand in docker_commands.keys():
+    # Get the proxy from environment variables
+    proxy = os.getenv('HTTP_PROXY', "")
+    if not proxy:
+        proxy = os.getenv('http_proxy', "")
 
-proxy_args = []
+    proxy_args = []
 
-if proxy:
-    o = urlparse(proxy)
+    if proxy:
+        o = urlparse(proxy)
 
-    # Split the host:port part, convert to an IP and put it back together
-    host = gethostbyname(o.netloc.split(':')[0])
-    port = o.netloc.split(':')[1]
-    netloc = '{}:{}'.format(host, port)
+        # Split the host:port part, convert to an IP and put it back together
+        host = gethostbyname(o.netloc.split(':')[0])
+        port = o.netloc.split(':')[1]
+        netloc = '{}:{}'.format(host, port)
 
-    # Overwrite the URL with the converted IP
-    proxy = o._replace(netloc=netloc).geturl()
+        # Overwrite the URL with the converted IP
+        proxy = o._replace(netloc=netloc).geturl()
 
-    # Set all the arguments
-    for env in env_vars:
-        proxy_args.append('{}={}={}'.format(docker_commands[subcommand], env, proxy))
+        # Set all the arguments
+        for env in env_vars:
+            proxy_args.append('{}={}={}'.format(docker_commands[subcommand], env, proxy))
 
-else:
-    print 'HTTP_PROXY and HTTP_PROXY are not set.'
+    else:
+        print 'HTTP_PROXY and HTTP_PROXY are not set.'
 
-command = (command + proxy_args + sys.argv[2:])
-print ' '.join(command)
+    command = (command + proxy_args + sys.argv[2:])
+    print ' '.join(command)
+
 call(command)
